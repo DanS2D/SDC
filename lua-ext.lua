@@ -1,5 +1,7 @@
 local M = {}
 
+os.isLinux = (system.getInfo("platform") == "linux")
+
 function _G.toboolean(value)
 	if (type(value) == "number") then
 		return (value > 0)

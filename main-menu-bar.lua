@@ -26,21 +26,6 @@ function M:new(options)
 	local primaryTextColor = theme:get().textColor.primary
 	local secondaryTextColor = theme:get().textColor.secondary
 
-	local screenBackground = display.newRect(0, 0, display.contentWidth, display.contentHeight)
-	screenBackground.x = display.contentCenterX
-	screenBackground.y = display.contentCenterY
-	screenBackground.isVisible = false
-	screenBackground.isHitTestable = true
-	screenBackground:addEventListener(
-		"touch",
-		function()
-			group:close()
-			native.setKeyboardFocus(nil)
-			return true
-		end
-	)
-	group:insert(screenBackground)
-
 	local background = display.newRect(0, 0, display.contentWidth, menuBarHeight)
 	background.anchorX = 0
 	background.x = 0
@@ -181,8 +166,8 @@ function M:new(options)
 							switchLib.new(
 							{
 								y = rowContentHeight * 0.5,
-								offIconName = _G.isLinux and "" or "square-full",
-								onIconName = _G.isLinux and "" or "check-square",
+								offIconName = os.isLinux and "" or "square-full",
+								onIconName = os.isLinux and "" or "check-square",
 								fontSize = fontSize,
 								parent = group,
 								onClick = function(event)

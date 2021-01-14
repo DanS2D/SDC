@@ -1,10 +1,16 @@
 local luaExt = require("lua-ext")
 local mainMenuBar = require("main-menu-bar")
+local floatingPanel = require("floating-panel")
 local titleFont = "fonts/Jost-500-Medium.ttf"
 local subTitleFont = "fonts/Jost-400-Book.ttf"
 local fontAwesomeBrandsFont = "fonts/FA5-Brands-Regular.ttf"
+local applicationMainMenuBar = nil
+local tilePanel = nil
 
-local applicationMainMenuBar =
+math.randomseed(os.time())
+
+-- create the main menu bar
+applicationMainMenuBar =
 	mainMenuBar:new(
 	{
 		font = titleFont,
@@ -56,7 +62,7 @@ local applicationMainMenuBar =
 				subItems = {
 					{
 						title = "Preferences",
-						iconName = _G.isLinux and "" or "tools",
+						iconName = os.isLinux and "" or "tools",
 						onClick = function(event)
 						end
 					}
@@ -67,7 +73,7 @@ local applicationMainMenuBar =
 				subItems = {
 					{
 						title = "Fade In Track",
-						iconName = _G.isLinux and "" or "turntable",
+						iconName = os.isLinux and "" or "turntable",
 						useCheckmark = true,
 						checkMarkIsOn = false,
 						onClick = function(event)
@@ -75,7 +81,7 @@ local applicationMainMenuBar =
 					},
 					{
 						title = "Fade Out Track",
-						iconName = _G.isLinux and "" or "turntable",
+						iconName = os.isLinux and "" or "turntable",
 						useCheckmark = true,
 						checkMarkIsOn = false,
 						onClick = function(event)
@@ -83,7 +89,7 @@ local applicationMainMenuBar =
 					},
 					{
 						title = "Crossfade",
-						iconName = _G.isLinux and "" or "music",
+						iconName = os.isLinux and "" or "music",
 						useCheckmark = true,
 						checkMarkIsOn = false,
 						onClick = function(event)
@@ -96,20 +102,27 @@ local applicationMainMenuBar =
 				subItems = {
 					{
 						title = "Light Theme",
-						iconName = _G.isLinux and "" or "palette",
+						iconName = os.isLinux and "" or "palette",
 						onClick = function(event)
 						end
 					},
 					{
 						title = "Dark Theme",
-						iconName = _G.isLinux and "" or "palette",
+						iconName = os.isLinux and "" or "palette",
 						onClick = function(event)
 						end
 					},
 					{
 						title = "Hacker Theme",
-						iconName = _G.isLinux and "" or "palette",
+						iconName = os.isLinux and "" or "palette",
 						onClick = function(event)
+						end
+					},
+					{
+						title = "Show Tile Panel",
+						iconName = os.isLinux and "" or "th-large",
+						onClick = function(event)
+							tilePanel:open(true)
 						end
 					}
 				}
@@ -119,7 +132,7 @@ local applicationMainMenuBar =
 				subItems = {
 					{
 						title = "Support Me On Patreon",
-						iconName = _G.isLinux and "" or "patreon",
+						iconName = os.isLinux and "" or "patreon",
 						font = fontAwesomeBrandsFont,
 						onClick = function(event)
 							system.openURL("https://www.patreon.com/dannyglover")
@@ -127,7 +140,7 @@ local applicationMainMenuBar =
 					},
 					{
 						title = "Report Bug",
-						iconName = _G.isLinux and "" or "github",
+						iconName = os.isLinux and "" or "github",
 						font = fontAwesomeBrandsFont,
 						onClick = function(event)
 							system.openURL("https://github.com/DannyGlover/SDC")
@@ -135,7 +148,7 @@ local applicationMainMenuBar =
 					},
 					{
 						title = "Submit Feature Request",
-						iconName = _G.isLinux and "" or "trello",
+						iconName = os.isLinux and "" or "trello",
 						font = fontAwesomeBrandsFont,
 						onClick = function(event)
 							system.openURL("https://github.com/DannyGlover/SDC")
@@ -143,14 +156,14 @@ local applicationMainMenuBar =
 					},
 					{
 						title = "Visit Website",
-						iconName = _G.isLinux and "" or "browser",
+						iconName = os.isLinux and "" or "browser",
 						onClick = function(event)
 							system.openURL("https://dannyglover.uk")
 						end
 					},
 					{
 						title = "About",
-						iconName = _G.isLinux and "" or "info-circle",
+						iconName = os.isLinux and "" or "info-circle",
 						onClick = function(event)
 						end
 					}
@@ -159,3 +172,26 @@ local applicationMainMenuBar =
 		}
 	}
 )
+
+-- create the tile panel
+tilePanel = floatingPanel:new({
+	width = (display.contentWidth * 0.4),
+	height = (display.contentHeight * 0.5),
+	title = "Tiles",
+})
+tilePanel.x = (display.contentWidth - (tilePanel.width * 0.5) - 5)
+tilePanel.y = (display.contentHeight - (tilePanel.height * 0.5))
+
+for i = 1, 11 do
+	for j = 1, 10 do
+		local colorR = (math.random(1, 255) / 255)
+		local colorG = (math.random(1, 255) / 255)
+		local colorB = (math.random(1, 255) / 255)
+
+		local rect = display.newRect(0, 0, 20, 20)
+		rect.x = (22 * i) - (tilePanel.width * 0.5) - 4
+		rect.y = (22 * j) - (tilePanel.width * 0.5) + 4
+		rect:setFillColor(colorR, colorG, colorB)
+		tilePanel:insert(rect)
+	end
+end
